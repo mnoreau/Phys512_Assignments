@@ -11,8 +11,17 @@ def ndiff(fun, x, full=False):
     derivlist = np.zeros(length)
     steplist = np.zeros(length)
     errorlist[0] = 10
-
+    
     i=0
+    if length==1: #Case where x is simply as value
+        while errorlist[i] >=10**(-7) and dx>10**(-16): #We decide arbitrarily that our tolerance will be 10^(-7)
+            dx = dx/2 #This step size reduction could probably be optimized
+            errorlist[i] = errorcal(fun, x dx) #We compute the error to see if we need a better step
+        derivlist[i]=centraldiff(fun,x,dx)
+        if(full):
+            return derivlist[0], steplist[0],errorlist[0] 
+        return derivlist[0]
+            
     for each in x: #This allows us to iterate over x if it is a list
         dx = 2e-4 #We start with a considerably large step
 
@@ -27,14 +36,10 @@ def ndiff(fun, x, full=False):
         #We continue to a new loop and increment the index
         i+=1
     if full:
-        if length==1: #If we have a single-value input
-            return derivlist[0], steplist[0], errorlist[0]
         #If we have a list input
         return derivlist, steplist, errorlist
     #This only runs if full is False
-    if length==1:
-        return derivlist[0] #Idem, for single-value input
-    return derivlist # idem for list inputs
+    return derivlist # we return only the derivatives
 
     
 def centraldiff(fun, x, step):
