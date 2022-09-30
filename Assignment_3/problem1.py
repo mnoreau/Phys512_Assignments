@@ -1,6 +1,7 @@
 import numpy as np
 from matplotlib import pyplot as plt
 
+#This is the normal runge-kutta
 def r4k_step(fun, x, y, h):
     k1 = fun(x,y)
     k2 = fun(x+h/2,y+k1*h/2)
@@ -9,6 +10,7 @@ def r4k_step(fun, x, y, h):
     
     return y+(h/6.0*(k1+2*k2+2*k3+k4))
 
+#We use the runge-kutta to integrate over some amount of points
 def integrator(f,start, stop, init, n):
     step = (stop-start)/n
     res = np.zeros(n)
@@ -16,11 +18,13 @@ def integrator(f,start, stop, init, n):
     res[0] = init
     for i, each in enumerate(res[1:], 1):
         res[i] = r4k_step(f, absc, init, step)
+        #We update our guess
         absc+=step
         init = res[i]
 
     return res
 
+#This is the runge-kutta again, but with the Delta added
 def rk4_stepd(fun, x0, y0, h):
     temp = 0
     minitemp = 0
@@ -31,6 +35,7 @@ def rk4_stepd(fun, x0, y0, h):
     
     return minitemp + (minitemp-temp)/15
 
+#This integrates like integrator(), but I using rk4_stepd
 def dintegrator(f, start, stop, init, n):
     step = (stop-start)/n
     res = np.zeros(n)

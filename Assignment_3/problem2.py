@@ -15,9 +15,12 @@ def fun(x,y, half_life=[4.468e9*365.25*24.0*3600.0, 24.10*24.0*3600.0, 6.70*3600
 y0 = np.zeros(15)
 y0[0] = 1
 x0 = 0
-x1 = 1e10
+x1 = 1e3
+#We integrate once then integrate again over a smaller size
 ans = integrate.solve_ivp(fun, [x0,x1], y0, method="Radau")
+ans = integrate.solve_ivp(fun, [x1,x1+200], ans.y[:,-1], method="Radau")
 
 plt.ion()
-absc = np.linspace(0,1e10, ans.y[0].size)
-plt.plot(absc, ans.y[-1]/ans.y[0] )
+absc = np.linspace(0,200, ans.y[0].size)
+plt.plot(absc, ans.y[4]/ans.y[3] )
+plt.title("Ratio of Thorium 230 to Uranium 236 at 1e3 s since start of decay", y=1.08)
